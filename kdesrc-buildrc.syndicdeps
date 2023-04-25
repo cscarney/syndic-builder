@@ -1,0 +1,41 @@
+# See the kdesrc-buildrc-sample for explanations of what the options do, or
+# view the manpage or kdesrc-build documentation at
+# https://docs.kde.org/?application=kdesrc-build
+global
+    branch-group kf6-qt6
+
+    include-dependencies true
+
+    prefix /opt/kde/usr # Where to install
+
+    # Where to download source code. By default the build directory and
+    # logs will be kept under this directory as well.
+    source-dir /opt/kdesrc
+
+    # Where to perform the build of source code before installation.
+    build-dir /opt/kdebuild
+
+    # This can be set to a specific value if auto-detection fails.
+    # Set to 'auto' to use (the number of detected cores) - 1
+    num-cores auto
+
+    # This is the same as above but used for heavyweight modules like
+    # qtwebengine, though you can use it for modules yourself. A conservative
+    # thumbrule is one core for every 2 GiB of total memory.
+    num-cores-low-mem 2
+
+    cmake-generator Make
+
+    # This defines a new "repository" entry for module-sets for Qt6, see
+    # custom-qt6-libs-build-include
+    # Not version-prefixed on KDE Invent, but Qt5 is version prefixed instead.
+    git-repository-base qt6-copy https://invent.kde.org/qt/qt/
+end global
+
+
+include /opt/kdesrc-build/kf6-common-options-build-include
+
+module-set
+    repository kde-projects
+    use-modules kirigami syndication kconfig
+end module-set
