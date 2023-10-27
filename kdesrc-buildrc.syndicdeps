@@ -32,6 +32,9 @@ global
     git-repository-base qt6-copy https://invent.kde.org/qt/qt/
 end global
 
+# build qt6 from source
+# if ubuntu:latest ships a supported qt6 version, remove this
+include /home/connor/Projects/kde6/src/kdesrc-build/qt6-build-include
 
 include /opt/kdesrc-build/kf6-common-options-build-include
 
