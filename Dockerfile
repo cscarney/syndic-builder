@@ -1,4 +1,14 @@
-FROM ubuntu:rolling AS buildkde
+FROM ubuntu:jammy as neon
+
+ADD http://archive.neon.kde.org/public.key /neon.key
+
+RUN apt-get update && \
+    apt-get install -y gnupg2 && \
+    echo "deb http://archive.neon.kde.org/release jammy main" >> /etc/apt/sources.list && \
+    apt-key add /neon.key && \
+    apt-get update
+
+FROM neon AS buildkde
 
 RUN apt-get update && \
     apt-get install -y git libyaml-libyaml-perl libio-socket-ssl-perl cmake make libc6-dev gcc g++ bzip2 qmake6 qt6-base-dev qt6-base-private-dev qt6-declarative-dev qt6-svg-dev qt6-shadertools-dev qt6-5compat-dev qt6-tools-dev libxkbcommon-dev gperf
@@ -15,7 +25,7 @@ RUN cd /opt && git clone --depth=1 https://invent.kde.org/ccarney/qreadable.git 
     cmake -DCMAKE_INSTALL_PREFIX=/opt/kde/usr ../qreadable && \
     make && make install
 
-FROM ubuntu:rolling
+FROM neon
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y git ca-certificates cmake make clang qt6-base-dev-tools qt6-base-dev qt6-declarative-dev qt6-l10n-tools qt6-tools-dev && \
@@ -23,5 +33,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=buildkde /opt/kde /opt/kde
+
+USER user
 
 CMD /bin/bash
