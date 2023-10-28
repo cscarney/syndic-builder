@@ -34,6 +34,4 @@ RUN apt-get update && \
 
 COPY --from=buildkde /opt/kde /opt/kde
 
-USER user
-
 CMD /bin/bash
